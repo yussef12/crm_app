@@ -12,7 +12,7 @@
 
             <div class="btn-group">
               <button type="button" class="btn btn-outline-dark dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                <span class="fw-bold"> {{role}} : {{userId}}</span>
+                <span class="fw-bold"> {{role}} </span>
               </button>
               <ul class="dropdown-menu">
                 <li><span class="dropdown-item">{{email}}</span></li>
