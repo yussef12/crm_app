@@ -14,3 +14,5 @@ export const GET_USER_ROLE = '[getters] get user role'
 export const GET_USER_ID = '[getters] get user id'
 export const IS_USER_AUTHENTICATE_GETTER = '[getters] check user auth'
 
+export const GET_SELECTED_COMPANY_GETTER = '[getters] get selected company'
+export const SET_SELECTED_COMPANY_MUTATION = '[mutations] set selected company'

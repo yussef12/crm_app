@@ -5,14 +5,14 @@
       <div class="row">
         <div class="col-12 mb-1">
           <label>Company name</label>
-          <Field value="{{company.size}}" name="name" type="text" class="form-control"
+          <Field v-model="company.name" name="name" type="text" class="form-control"
                  :class="{ 'is-invalid': errors.name }"/>
           <div class="invalid-feedback">{{ errors.name }}</div>
         </div>
 
         <div class="col-12 mb-1">
           <label>Size</label>
-          <Field value="{{company.size}}" name="size" as="select" class="form-control"
+          <Field v-model="company.size" name="size" as="select" class="form-control"
                  :class="{ 'is-invalid': errors.size }">
             <option value="">Select size</option>
             <option value="small">Small</option>
@@ -44,8 +44,8 @@
 <script>
 import {Form, Field} from 'vee-validate';
 import * as Yup from 'yup';
-import {mapGetters} from 'vuex';
-import {GET_USER_ID, GET_USER_ROLE} from '@/store/constants';
+import {mapGetters, mapMutations} from 'vuex';
+import {GET_SELECTED_COMPANY_GETTER, SET_SELECTED_COMPANY_MUTATION} from '@/store/constants';
 import apiService from '@/services/apiService';
 import Swal from 'sweetalert2';
 import Skeleton from '@/components/Skeleton.vue';
@@ -55,16 +55,9 @@ export default {
     Form,
     Field,
   },
-  props: {
-    company: {
-      type: Object, // Specify the type as Object
-      required: true,
-    },
-  },
   computed: {
-    ...mapGetters('auth', {
-      role: GET_USER_ROLE,
-      id: GET_USER_ID,
+    ...mapGetters('company', {
+      company: GET_SELECTED_COMPANY_GETTER,
     }),
   },
   data() {
@@ -74,15 +67,14 @@ export default {
     });
 
     return {
-      localCompany: {
-        name: this.company.name,
-        size: this.company.size,
-      },
       schema,
       loadingButton: false,
     };
   },
   methods: {
+    ...mapMutations('company',{
+      setCompany:SET_SELECTED_COMPANY_MUTATION
+    }),
     async onSubmit(values, {resetForm}) {
       let company = values;
       resetForm();
@@ -91,7 +83,7 @@ export default {
     },
     async updateCompany(company) {
       try {
-        const response = await apiService.put('/companies', company);
+        const response = await apiService.put('/companies/'+this.company.id, company);
         console.log(response);
         Swal.fire({
           position: 'top-end',
@@ -100,12 +92,14 @@ export default {
           showConfirmButton: false,
           timer: 1500,
         });
+        this.setCompany(company);
+        this.$emit('company-saved');
 
       } catch (error) {
         Swal.fire({
           position: 'top-end',
           icon: 'error',
-          title: 'company creation has been failed',
+          title: 'company update has been failed',
           showConfirmButton: false,
           timer: 1500,
         });
@@ -113,6 +107,8 @@ export default {
       this.loadingButton = false;
     },
   },
+  mounted() {
+  }
 
 };
 </script>

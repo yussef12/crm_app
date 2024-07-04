@@ -46,9 +46,13 @@
   <div v-else>
     <Skeleton/>
   </div>
-  <BootstrapModal   ref="modal" title="Add new Company" @confirm="onConfirm">
-    <CreateCompany v-if="lastEvent=='create'" />
-    <UpdateCompany :company="selectedCompany" v-if="lastEvent=='update'" />
+  <BootstrapModal ref="modal" title="Company Details" @confirm="onConfirm">
+    <div v-if="lastEvent === 'create'">
+      <CreateCompany :key="'create'" />
+    </div>
+    <div v-else-if="lastEvent === 'update'">
+      <UpdateCompany :key="'update'"  @company-saved="getCompanies"  />
+    </div>
   </BootstrapModal>
 </template>
 
@@ -60,6 +64,8 @@ import apiService from "@/services/apiService";
 import Swal from "sweetalert2";
 import Skeleton from "@/components/Skeleton.vue";
 import UpdateCompany from "@/views/company/UpdateCompany.vue";
+import {mapMutations} from "vuex";
+import {SET_SELECTED_COMPANY_MUTATION} from "@/store/constants";
 
 export default {
   name: 'CompanyListing',
@@ -74,14 +80,15 @@ export default {
       lastEvent:'',
       companies: [],
       filteredCompanies: [],
-      profile: {},
       loading: true,
       searchQuery: '',
       sortColumnKey: '',
-      selectedCompany:null,
     }
   },
   methods: {
+    ...mapMutations('company',{
+      setCompany:SET_SELECTED_COMPANY_MUTATION
+    }),
     formatDateTime(dateTimeString) {
       const date = new Date(dateTimeString);
       return date.toLocaleString(); // Adjust as needed
@@ -177,12 +184,12 @@ export default {
     },
 
     editCompany(company){
-      this.selectedCompany=company
+    this.setCompany(company);
          this.openModal('update');
     }
   },
   async created() {
-    await this.getCompanies()
+     await this.getCompanies()
 
   }
 };
