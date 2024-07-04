@@ -3,6 +3,9 @@ import DashboardLayout from "@/layout/DashboardLayout.vue";
 import ProfileDetails from  "@/views/users/ProfileDetails.vue";
 import NotFound from '@/views/NotFound.vue';
 import CompanyListing from '@/views/company/CompanyListing.vue';
+import AdminListing from "@/views/superadmin/AdminListing.vue";
+import CreateAdmin from "@/views/superadmin/CreateAdmin.vue";
+
 const routes = [
 
     {
@@ -53,6 +56,18 @@ const routes = [
                 meta: { auth: true,title:'Companies Listing' },
 
             },
+            {
+                path: 'superadmin',
+                name: 'admin.superadmins',
+                component: AdminListing,
+                meta: { auth: true,title:'Super Admins Listing' },
+            },
+            {
+                path: 'create',
+                name: 'admin.create',
+                component: CreateAdmin,
+                meta: { auth: true,title:'Create super Admin' },
+            }
         ],
     },
 
