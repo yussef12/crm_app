@@ -20,7 +20,7 @@
 
       <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownUser2">
         <li>
-          <router-link :to="{name:'profile'}" class="dropdown-item" >Profile</router-link>
+          <router-link :to="{name:'admin.profile'}" class="dropdown-item" >Profile</router-link>
         </li>
         <li>
           <hr class="dropdown-divider">

@@ -6,23 +6,19 @@ export default {
 
 <template>
   <ul class="nav nav-pills flex-column text-dark">
-    <li class="nav-item">
-      <a href="#" class="nav-link active" aria-current="page">
-        <svg class="bi me-2" width="16" height="16">
-          <use xlink:href="#home"></use>
-        </svg>
-        Dashboard
-      </a>
+    <li  class="nav-item">
+      <router-link active-class="active" class="nav-link " :to="{name:'dashboard'}">  <svg class="bi me-2" width="16" height="16">
+        <use xlink:href="#home"></use>
+      </svg>
+        Dashboard</router-link>
     </li>
-    <li>
-      <a href="#" class="nav-link">
-        <svg class="bi me-2" width="16" height="16">
-          <use xlink:href="#table"></use>
-        </svg>
-        Orders
-      </a>
+    <li  class="nav-item">
+     <router-link active-class="active" class="nav-link " :to="{name:'admin.companies'}">  <svg class="bi me-2" width="16" height="16">
+       <use xlink:href="#home"></use>
+     </svg>
+       Companies</router-link>
     </li>
-    <li>
+    <li  class="nav-item">
       <a href="#" class="nav-link">
         <svg class="bi me-2" width="16" height="16">
           <use xlink:href="#grid"></use>
@@ -30,7 +26,7 @@ export default {
         Products
       </a>
     </li>
-    <li>
+    <li class="nav-item">
       <a href="#" class="nav-link">
         <svg class="bi me-2" width="16" height="16">
           <use xlink:href="#people-circle"></use>

@@ -13,7 +13,7 @@
       </div>
       <div class="h-100 test p-5 card" style="height:1000px;">
         <div class="card-header">
-          <h3 class="card-title">{{ pageTitle }}</h3>
+          <h5 class="card-title text-muted">{{ pageTitle }}</h5>
         </div>
         <div class="card-body">
           <router-view></router-view>
