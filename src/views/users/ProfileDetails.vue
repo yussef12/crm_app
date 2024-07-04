@@ -1,60 +1,62 @@
 <template>
-  <Form @submit="onSubmit" :validation-schema="schema" v-slot="{ errors }">
-    <div class="row">
-      <div class="col-4 mb-1">
-        <label>Full name</label>
-        <Field  v-model="profile.name"  name="name" type="text" class="form-control" :class="{ 'is-invalid': errors.name }"/>
-        <div class="invalid-feedback">{{ errors.name }}</div>
+  <div v-if="!loading">
+    <Form @submit="onSubmit" :validation-schema="schema" v-slot="{ errors }">
+      <div class="row">
+        <div class="col-4 mb-1">
+          <label>Full name</label>
+          <Field v-model="profile.name" name="name" type="text" class="form-control"
+                 :class="{ 'is-invalid': errors.name }"/>
+          <div class="invalid-feedback">{{ errors.name }}</div>
+        </div>
+        <div class="col-4 mb-1">
+          <label>email</label>
+          <Field v-model="profile.email" name="email" type="email" class="form-control"
+                 :class="{ 'is-invalid': errors.email }"/>
+          <div class="invalid-feedback">{{ errors.email }}</div>
+        </div>
+
+        <div class="col-4 mb-1">
+          <label>Birth date</label>
+          <Field v-model="profile.birth_date" name="birth_date" type="date" class="form-control"
+                 :class="{ 'is-invalid': errors.birth_date }"/>
+          <div class="invalid-feedback">{{ errors.birth_date }}</div>
+        </div>
+        <div class="col-4 mb-1">
+          <label>Phone number</label>
+          <Field v-model="profile.phone_number" name="phone_number" type="text" class="form-control"
+                 :class="{ 'is-invalid': errors.phone_number }"/>
+          <div class="invalid-feedback">{{ errors.phone_number }}</div>
+        </div>
+        <div class="col-4 mb-1">
+          <label> Address</label>
+          <textarea v-model="profile.address" name="address" type="text" rows="2" class="form-control"
+                    :class="{ 'is-invalid': errors.address }"/>
+          <div class="invalid-feedback">{{ errors.address }}</div>
+        </div>
+
       </div>
-      <div class="col-4 mb-1">
-        <label>email</label>
-        <Field  v-model="profile.email"  name="email" type="email" class="form-control" :class="{ 'is-invalid': errors.email }"/>
-        <div class="invalid-feedback">{{ errors.email }}</div>
+      <div class="row">
+        <div class="col-3">
+          <button class="btn btn-success btn-lg"  type="button" disabled v-if="loadingButton">
+            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            Loading...
+          </button>
+          <button type="submit" class="btn btn-success btn-lg" v-else>save</button>
+          <button type="button" class="btn btn-secondary btn-lg ms-1" @click="reset">reset</button>
+        </div>
       </div>
 
-      <div class="col-4 mb-1">
-        <label>Birth date</label>
-        <Field  v-model="profile.birth_date" name="birth_date" type="date" class="form-control" :class="{ 'is-invalid': errors.birth_date }"/>
-        <div class="invalid-feedback">{{ errors.birth_date }}</div>
-      </div>
-      <div class="col-4 mb-1">
-        <label>Phone number</label>
-        <Field  v-model="profile.phone_number"  name="phone_number" type="text" class="form-control" :class="{ 'is-invalid': errors.phone_number }"/>
-        <div class="invalid-feedback">{{ errors.phone_number }}</div>
-      </div>
-      <div class="col-4 mb-1">
-        <label> Address</label>
-        <textarea  v-model="profile.address" name="address" type="text" rows="2" class="form-control" :class="{ 'is-invalid': errors.address }"/>
-        <div class="invalid-feedback">{{ errors.address }}</div>
-      </div>
-
-    </div>
-    <div class="row">
-      <div class="col-4 mb-3">
-        <label>Password</label>
-        <Field name="password" type="password" class="form-control" :class="{ 'is-invalid': errors.password }"/>
-        <div class="invalid-feedback">{{ errors.password }}</div>
-      </div>
-      <div class="col-4 mb-3">
-        <label>Confirm Password</label>
-        <Field name="confirm_password" type="password" class="form-control"
-               :class="{ 'is-invalid': errors.confirm_password }"/>
-        <div class="invalid-feedback">{{ errors.confirm_password }}</div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-3">
-        <button type="submit" class="btn btn-success btn-lg">save</button>
-        <button type="submit" class="btn btn-secondary btn-lg ms-1">reset</button>
-      </div>
-    </div>
-
-  </Form>
+    </Form>
+  </div>
+  <div v-else>
+    <Skeleton/>
+  </div>
 
 </template>
 
 <script>
 import {Form, Field} from 'vee-validate';
+import Skeleton from '@/components/Skeleton.vue'
 import * as Yup from 'yup';
 import {mapGetters} from "vuex";
 import {GET_USER_ID, GET_USER_ROLE} from "@/store/constants";
@@ -65,6 +67,7 @@ export default {
   components: {
     Form,
     Field,
+    Skeleton
 
   },
   computed: {
@@ -79,49 +82,54 @@ export default {
     const schema = Yup.object().shape({
       name: Yup.string().required('Full name is required'),
       email: Yup.string().email('Invalid email format').required('Email is required'),
-      birth_date: Yup.date().nullable(),
+      birth_date: Yup.date()
+          .nullable()
+          .max(new Date(Date.now() - 18 * 365 * 24 * 60 * 60 * 1000), 'Must be at least 18 years old')
+          .typeError('Invalid date format'),
       phone_number: Yup.string().nullable()
           .matches(/^\d{10}$/, 'Phone number must be exactly 10 digits'),
       address: Yup.string().nullable(),
-      password: Yup.string().required('Password is required').min(6, 'Password must be at least 6 characters'),
-      confirm_password: Yup.string()
-          .required('Confirm Password is required')
-          .oneOf([Yup.ref('password'), null], 'Passwords must match')
+
     });
 
     return {
       schema,
       profile: {},
-      selectedAgent: null
+      loading: true,
+      loadingButton:false,
     }
   },
   methods: {
     onSubmit(values) {
-      let call = values;
-      call.agent_id = this.selectedAgent ?? this.id;
-      this.saveCall(call);
+      let profile = values;
+      this.loadingButton=true;
+      this.updateProfile(profile);
 
     },
     async getAuthProfile() {
       try {
         const response = await apiService.post('/me')
-
-        console.log(response.data);
         this.profile = response.data.user;
+        this.loading=false;
       } catch (error) {
-        console.log(error)
-
+        Swal.fire({
+          position: "top-end",
+          icon: "error",
+          title: "something wrong, Profile page can not be loaded",
+          showConfirmButton: false,
+          timer: 1500,
+        });
       }
     },
-    async saveCall(call) {
+    async updateProfile(profile) {
 
       try {
-        const response = await apiService.post('/calls', call)
+        const response = await apiService.put('/update-user', profile)
         console.log(response)
         Swal.fire({
           position: "top-end",
           icon: "success",
-          title: "Call created successfully",
+          title: "Profile updated successfully",
           showConfirmButton: false,
           timer: 1500,
         });
@@ -130,15 +138,20 @@ export default {
         Swal.fire({
           position: "top-end",
           icon: "error",
-          title: "Call failed to be created",
+          title: "Profile update has been failed",
           showConfirmButton: false,
           timer: 1500,
         });
 
 
       }
+      this.loadingButton=false;
 
-    }
+    },
+    reset(){
+      this.loading=true;
+      this.getAuthProfile();
+    },
   },
   mounted() {
     this.getAuthProfile()
