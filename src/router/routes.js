@@ -1,7 +1,15 @@
 import LoginPage from '../views/LoginPage.vue'
-import Dashboard from '../views/Dashboard.vue'
+import DashboardLayout from "@/layout/DashboardLayout.vue";
+import ProfileDetails from  "@/views/users/ProfileDetails.vue";
+import NotFound from '@/views/NotFound.vue';
 
 const routes = [
+
+    {
+        path: '/:pathMatch(.*)*',
+        component: NotFound,
+
+    },
     {
         path: '/',
         name: 'home',
@@ -15,15 +23,27 @@ const routes = [
         meta: { auth: false }
     },
     {
+        path: '/dashboard/:pathMatch(.*)*',
+        component: NotFound
+    },
+    {
         path: '/dashboard',
         name: 'Dashboard',
-        meta: { auth: true },
-        component: Dashboard,
+        component: DashboardLayout,
+        meta: { auth: true,title:'Dashboard' },
 
         children: [
+            {
+                path: 'profile',
+                name: 'profile',
+                component: ProfileDetails,
+                meta: { auth: true,title:'Profile details' },
 
+
+            },
         ],
     },
+
 
 ]
 
