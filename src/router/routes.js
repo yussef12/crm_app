@@ -7,7 +7,18 @@ import AdminListing from "@/views/superadmin/AdminListing.vue";
 import EmployeeListing from "@/views/employee/EmployeeListing.vue";
 import CreateAdmin from "@/views/superadmin/CreateAdmin.vue";
 import InvitationListing from "@/views/invitation/InvitationListing.vue";
+import EmployeeValidation from "@/views/EmployeeValidation.vue";
+import apiService from "@/services/apiService";
 
+const validateToken = async (token) => {
+    const url = `${process.env.VUE_APP_BASE_API}/is-invitation-link-valid`;
+    try {
+        const response = await apiService.post(url, {token});
+        return response.data.is_valid;
+    } catch (error) {
+        return false;
+    }
+};
 const routes = [
 
     {
@@ -26,6 +37,22 @@ const routes = [
         name: 'LoginPage',
         component: LoginPage,
         meta: {auth: false}
+    },
+    {
+        path: '/employee-validate/:token',
+        name: 'employee.validation',
+        component: EmployeeValidation,
+        props: true,
+        meta: {auth: false},
+        beforeEnter: async (to, from, next) => {
+            const token = to.params.token;
+            const isValid = await validateToken(token);
+            if (isValid) {
+                next();
+            } else {
+                next('/not-found');
+            }
+        }
     },
     {
         path: '/dashboard/:pathMatch(.*)*',

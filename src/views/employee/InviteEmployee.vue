@@ -86,7 +86,7 @@ export default {
     },
     async saveInvitation(invitationData) {
       const invitation= invitationData
-      invitation.app_url=process.env.VUE_APP_BASE_URL;
+      invitation.app_url=window.location.origin+'/employee-validate';
       console.log(invitation);
       try {
         const response = await apiService.post('/users/invite-employee', invitation); // Adjust endpoint as per your API
