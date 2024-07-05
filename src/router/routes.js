@@ -10,6 +10,7 @@ import InvitationListing from "@/views/superadminspace/invitation/InvitationList
 import EmployeeValidation from "@/views/EmployeeValidation.vue";
 import apiService from "@/services/apiService";
 import LogsListing from "@/views/administratorspace/LogsListing.vue";
+import EmployeeOfComayListing from "@/views/employeespace/EmployeeOfComayListing.vue";
 
 const validateToken = async (token) => {
     const url = `${process.env.VUE_APP_BASE_API}/is-invitation-link-valid`;
@@ -126,6 +127,22 @@ const routes = [
                 },
 
             }
+        ],
+    },
+    {
+        path: '/employee',
+        name: 'employee',
+        component: DashboardLayout,
+        meta: {auth: true, title: 'Dashboard', requiredRoles: ['employee']},
+
+        children: [
+            {
+                path: 'company-employees',
+                name: 'company-employees',
+                component: EmployeeOfComayListing,
+                meta: {auth: true, title: 'Company employees Listing', requiredRoles: ['employee']},
+
+            },
         ],
     },
     {

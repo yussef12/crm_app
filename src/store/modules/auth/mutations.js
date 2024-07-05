@@ -1,4 +1,8 @@
-import {SHOW_LODADING_LOADER_MUTATION,SET_USER_TOKEN_DATA_MUTATION } from "@/store/constants";
+import {
+    SHOW_LODADING_LOADER_MUTATION,
+    SET_USER_TOKEN_DATA_MUTATION,
+    SET_LOGIN_ERROR_MESSAGE_MUTATION
+} from "@/store/constants";
 
 
 export default {
@@ -18,6 +22,12 @@ export default {
         state.isLoading = payload;
 
     },
+
+    [SET_LOGIN_ERROR_MESSAGE_MUTATION](state, payload) {
+        state.loginErrorMessage = payload;
+    }
+
+
 
 
 }

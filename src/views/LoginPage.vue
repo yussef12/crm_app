@@ -4,9 +4,9 @@
       <div class="row d-flex justify-content-center align-items-center h-100">
         <div class="col-md-6 card shadow p-5">
           <div>
-           <div class="alert alert-danger py-3" v-if="loginErrorMessage!==''">
-             <p class="text-danger">{{ loginErrorMessage }}</p>
-           </div>
+            <div class="alert alert-danger py-3" v-if="loginErrorMessage !== ''">
+              <p class="text-danger">{{ loginErrorMessage }}</p>
+            </div>
             <Form @submit="onSubmit" :validation-schema="schema">
               <!-- Email input -->
               <div data-mdb-input-init class="form-outline mb-4">
@@ -56,7 +56,6 @@ export default {
   },
   data() {
     return {
-      loginErrorMessage:'',
       schema: yup.object({
         email: yup.string().required().email(),
         password: yup.string().required().min(6),
@@ -78,19 +77,15 @@ export default {
           this.$router.push('/dashboard');
 
       }catch (error){
-         this.f(false);
-           this.loginErrorMessage=error;
+         console.log(error)
 
 
       }
 
     }
   },
-
-  computed:{
-    ...mapState('auth',{
-      loginErrorMessage:(state)=>state.loginErrorMessage
-    }),
+  computed: {
+    ...mapState('auth', ['loginErrorMessage']),
   }
 
 }

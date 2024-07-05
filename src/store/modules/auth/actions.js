@@ -2,7 +2,7 @@ import {
     LOGIN_ACTION,
     SET_USER_TOKEN_DATA_MUTATION,
     SHOW_LODADING_LOADER_MUTATION,
-    LOGOUT_ACTION
+    LOGOUT_ACTION, SET_LOGIN_ERROR_MESSAGE_MUTATION
 } from "@/store/constants";
 import apiService from '@/services/apiService';
 
@@ -37,19 +37,19 @@ export default {
             localStorage.setItem('userData', JSON.stringify(tokenData));
 
             context.commit(SET_USER_TOKEN_DATA_MUTATION, tokenData);
-            context.commit(SHOW_LODADING_LOADER_MUTATION,false);
+
 
 
         }
        } catch (error) {
-            if(error?.response.status==401){
-                throw 'email or password are not valid';
-            }
+         if(error.response.status==401){
+             context.commit(SET_LOGIN_ERROR_MESSAGE_MUTATION,error.response.data.message);
+         }else{
+             context.commit(SET_LOGIN_ERROR_MESSAGE_MUTATION,'failed to authentificate, please retry agian');
+         }
 
        }
-
-
-
+        context.commit(SHOW_LODADING_LOADER_MUTATION,false);
 
    }
 }

@@ -16,3 +16,4 @@ export const IS_USER_AUTHENTICATE_GETTER = '[getters] check user auth'
 
 export const GET_SELECTED_COMPANY_GETTER = '[getters] get selected company'
 export const SET_SELECTED_COMPANY_MUTATION = '[mutations] set selected company'
+export  const SET_LOGIN_ERROR_MESSAGE_MUTATION ='[mutations] set error message';

@@ -13,7 +13,9 @@ export default {
            userId:JSON.parse(localStorage.getItem('userData'))?.userId ?? null,
            role :JSON.parse(localStorage.getItem('userData'))?.role ??null,
            isLoading: false,
+           loginErrorMessage:'',
        }
+
    },
 
     mutations,
