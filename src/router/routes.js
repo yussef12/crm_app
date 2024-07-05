@@ -4,7 +4,9 @@ import ProfileDetails from  "@/views/users/ProfileDetails.vue";
 import NotFound from '@/views/NotFound.vue';
 import CompanyListing from '@/views/company/CompanyListing.vue';
 import AdminListing from "@/views/superadmin/AdminListing.vue";
+import EmployeeListing from "@/views/employee/EmployeeListing.vue";
 import CreateAdmin from "@/views/superadmin/CreateAdmin.vue";
+import InvitationListing from "@/views/invitation/InvitationListing.vue";
 
 const routes = [
 
@@ -63,10 +65,23 @@ const routes = [
                 meta: { auth: true,title:'Super Admins Listing' },
             },
             {
+                path: 'employees',
+                name: 'admin.employees',
+                component: EmployeeListing,
+                meta: { auth: true,title:'Employee Listing' },
+            },
+            {
                 path: 'create',
                 name: 'admin.create',
                 component: CreateAdmin,
                 meta: { auth: true,title:'Create super Admin' },
+            },
+            {
+                path: 'invitations',
+                name: 'admin.invitations',
+                component: InvitationListing,
+                meta: { auth: true,title:'Invitation Listing' },
+
             }
         ],
     },
