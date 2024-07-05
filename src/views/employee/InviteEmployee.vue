@@ -98,6 +98,7 @@ export default {
           showConfirmButton: false,
           timer: 1500,
         });
+        this.$emit('invitation-saved');
       } catch (error) {
         console.error('Error sending Invitation. please retry later', error);
         Swal.fire({
