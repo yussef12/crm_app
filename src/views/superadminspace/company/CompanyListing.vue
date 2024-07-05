@@ -59,11 +59,11 @@
 <script>
 
 import BootstrapModal from '@/components/BootstrapModal.vue';
-import CreateCompany from "@/views/company/CreateCompany.vue";
+import CreateCompany from "@/views/superadminspace/company/CreateCompany.vue";
 import apiService from "@/services/apiService";
 import Swal from "sweetalert2";
 import Skeleton from "@/components/Skeleton.vue";
-import UpdateCompany from "@/views/company/UpdateCompany.vue";
+import UpdateCompany from "@/views/superadminspace/company/UpdateCompany.vue";
 import {mapMutations} from "vuex";
 import {SET_SELECTED_COMPANY_MUTATION} from "@/store/constants";
 

@@ -65,7 +65,7 @@ import apiService from "@/services/apiService";
 import Swal from "sweetalert2";
 import Skeleton from "@/components/Skeleton.vue";
 import BootstrapModal from '@/components/BootstrapModal.vue';
-import InviteEmployee from "@/views/employee/InviteEmployee.vue";
+import InviteEmployee from "@/views/superadminspace/employee/InviteEmployee.vue";
 
 export default {
   name: 'CompanyListing',
