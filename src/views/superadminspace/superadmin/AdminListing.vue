@@ -2,15 +2,11 @@
   <div v-if="!loading">
     <div class="d-flex justify-content-between ">
       <div class="w-50">
-        <input class="form-control" type="text" v-model="searchQuery" @input="searchEmployees"
-               placeholder="Search by employee name">
+        <input class="form-control" type="text" v-model="searchQuery" @input="searchAdmins"
+               placeholder="Search by admin name">
       </div>
       <div>
-        <div>
-          <button class="btn btn-light text-primary border-primary fw-bold" @click="openModal()"> Invite new Employee
-          </button>
-
-        </div>
+        <router-link class="btn btn-light text-primary border-primary fw-bold" :to="{name :'admin.create'}">+ Add new Super amin</router-link>
 
       </div>
 
@@ -20,7 +16,6 @@
       <thead>
       <tr>
         <th scope="col">id</th>
-        <th scope="col">company id</th>
         <th scope="col">
           <button class="btn btn-default" @click="sortColumn('name')"><i class="bi bi-sort-up"></i></button>
           Name
@@ -31,14 +26,12 @@
       </tr>
       </thead>
       <tbody>
-      <tr v-for="employee in filteredEmployees" :key="employee.id">
-        <th scope="row">{{ employee.id }}</th>
-        <th scope="row">{{ employee.company_id }}</th>
-
-        <th scope="row">{{ employee.name }}</th>
-        <th scope="row">{{ employee.email }}</th>
-        <th scope="row">{{ employee.birth_date }}</th>
-        <th scope="row">{{ formatDateTime(employee.created_at) }}</th>
+      <tr v-for="admin in filteredAdmins" :key="admin.id">
+        <th scope="row">{{ admin.id }}</th>
+        <th scope="row">{{ admin.name }}</th>
+        <th scope="row">{{ admin.email }}</th>
+        <th scope="row">{{ admin.birth_date }}</th>
+        <th scope="row">{{ formatDateTime(admin.created_at) }}</th>
       </tr>
 
       </tbody>
@@ -47,32 +40,31 @@
   <div v-else>
     <Skeleton/>
   </div>
-  <BootstrapModal ref="modal" title="Invite employee" @confirm="onConfirm">
-    <div>
-      <InviteEmployee/>
-    </div>
+  <BootstrapModal ref="modal" title="Create super admin" @confirm="onConfirm">
+    <CreateAdmin @admin-saved="getAdmins"/>
+
   </BootstrapModal>
 </template>
 
 <script>
 
+import BootstrapModal from '@/components/BootstrapModal.vue';
 import apiService from "@/services/apiService";
 import Swal from "sweetalert2";
 import Skeleton from "@/components/Skeleton.vue";
-import BootstrapModal from '@/components/BootstrapModal.vue';
-import InviteEmployee from "@/views/employee/InviteEmployee.vue";
+import CreateAdmin from "@/views/superadminspace/superadmin/CreateAdmin.vue";
 
 export default {
   name: 'CompanyListing',
   components: {
-    InviteEmployee,
     Skeleton,
-    BootstrapModal
+    CreateAdmin,
+    BootstrapModal,
   },
   data() {
     return {
-      employees: [],
-      filteredEmployees: [],
+      admins: [],
+      filteredAdmins: [],
       loading: true,
       searchQuery: '',
       sortColumnKey: '',
@@ -85,37 +77,38 @@ export default {
       const date = new Date(dateTimeString);
       return date.toLocaleString(); // Adjust as needed
     },
-    openModal() {
+    openModal(event) {
+      this.lastEvent = event;
       this.$refs.modal.showModal();
     },
     onConfirm() {
       alert('Confirmed!');
     },
-    async getEmployees(nameQuery = '', sortColumn = '') {
+    async getAdmins(nameQuery = '', sortColumn = '') {
       try {
-        let url = `/employees?name=${nameQuery}`;
+        let url = `/superadmins?name=${nameQuery}`;
         if (sortColumn) {
           url += `&sort=${sortColumn}`;
         }
 
         const response = await apiService.get(url);
-        this.employees = response.data.employees;
-        this.filteredEmployees = response.data.employees;
+        this.admins = response.data.admins;
+        this.filteredAdmins = response.data.admins;
         this.loading = false;
 
       } catch (error) {
         Swal.fire({
           position: "top-end",
           icon: "error",
-          title: "something wrong, employee page can not be loaded",
+          title: "something wrong, admin page can not be loaded",
           showConfirmButton: false,
           timer: 3000,
         });
       }
     },
 
-    searchEmployees() {
-      this.getEmployees(this.searchQuery);
+    searchAdmins() {
+      this.getAdmins(this.searchQuery);
     },
     sortColumn(columnKey) {
       if (this.sortColumnKey === columnKey) {
@@ -124,14 +117,14 @@ export default {
         this.sortColumnKey = columnKey;
       }
 
-      // Call getEmployees with updated sortColumnKey
-      this.getEmployees(this.searchQuery, this.sortColumnKey);
+      // Call getAdmins with updated sortColumnKey
+      this.getAdmins(this.searchQuery, this.sortColumnKey);
     },
 
 
   },
   async created() {
-    await this.getEmployees()
+    await this.getAdmins()
 
   }
 };

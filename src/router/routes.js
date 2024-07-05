@@ -2,13 +2,14 @@ import LoginPage from '../views/LoginPage.vue'
 import DashboardLayout from "@/layout/DashboardLayout.vue";
 import ProfileDetails from "@/views/users/ProfileDetails.vue";
 import NotFound from '@/views/NotFound.vue';
-import CompanyListing from '@/views/company/CompanyListing.vue';
-import AdminListing from "@/views/superadmin/AdminListing.vue";
-import EmployeeListing from "@/views/employee/EmployeeListing.vue";
-import CreateAdmin from "@/views/superadmin/CreateAdmin.vue";
-import InvitationListing from "@/views/invitation/InvitationListing.vue";
+import CompanyListing from '@/views/superadminspace/company/CompanyListing.vue';
+import AdminListing from "@/views/superadminspace/superadmin/AdminListing.vue";
+import EmployeeListing from "@/views/superadminspace/employee/EmployeeListing.vue";
+import CreateAdmin from "@/views/superadminspace/superadmin/CreateAdmin.vue";
+import InvitationListing from "@/views/superadminspace/invitation/InvitationListing.vue";
 import EmployeeValidation from "@/views/EmployeeValidation.vue";
 import apiService from "@/services/apiService";
+import LogsListing from "@/views/administratorspace/LogsListing.vue";
 
 const validateToken = async (token) => {
     const url = `${process.env.VUE_APP_BASE_API}/is-invitation-link-valid`;
@@ -127,7 +128,22 @@ const routes = [
             }
         ],
     },
+    {
+        path: '/administrator',
+        name: 'administrator',
+        component: DashboardLayout,
+        meta: {auth: true, title: 'Dashboard', requiredRoles: ['administrator']},
 
+        children: [
+            {
+                path: 'logs',
+                name: 'logs',
+                component: LogsListing,
+                meta: {auth: true, title: 'Logs Listing', requiredRoles: ['administrator']},
+
+            },
+        ],
+    },
 
 ]
 
